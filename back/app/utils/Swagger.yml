@@ -76,7 +76,7 @@ paths:
                   $ref: "#/components/schemas/Card"
   /cards/{cardId}/answer:
     patch:
-      tags: 
+      tags:
         - Learning
       summary: Answer a question
       description: Used to answer a question. Body indicate if user has answered correctly or not.

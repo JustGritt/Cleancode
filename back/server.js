@@ -1,25 +1,19 @@
-import express from "express";
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
+const express = require("express");
+const cors = require('cors');
+require("dotenv").config();
+
+// Import routes
+const swaggerRoutes = require("./app/routes/swagger.routes.js");
+const userRoutes = require("./app/routes/user.routes.js");
 
 const app = express();
-const port = 3000;
+app.use(cors());
+app.use(express.json());
 
-const options = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "Express API with Swagger",
-            version: "1.0.0",
-        },g
-    },
-    apis: ["./Swagger.yml"],
-};
+// Call routes
+swaggerRoutes(app);
+userRoutes(app);
 
-const specs = swaggerJsdoc(options);
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is listening on port ${process.env.PORT}`);
 });
