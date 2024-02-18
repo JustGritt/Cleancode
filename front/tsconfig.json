@@ -1,3 +1,25 @@
 {
-  "extends": "astro/tsconfigs/strict"
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "./build",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@root/*": ["*"],
+      "@app/*": ["src/app/*"],
+      "@icons/*": ["src/assets/icons/*"],
+      "@styles/*": ["src/styles/*"],
+      "@assets/*": ["src/assets/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@modules/*": ["src/modules/*"],
+      "@components/*": ["src/components/*"],
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build"]
 }
