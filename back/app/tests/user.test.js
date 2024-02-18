@@ -10,7 +10,7 @@ describe('User Authentication', () => {
     let user;
 
     beforeAll(async () => {
-        const filename = path.join(__dirname, './data/test_users.json');
+        const filename = path.join(__dirname, './test_users.json');
         await fs.promises.writeFile(filename, '[]');
         userRepository = new UserRepository(filename);
         userService = new UserService(userRepository);

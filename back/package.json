@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "watch": "node server.js --watch",
-    "test": "jest"
+    "test": "jest --watchAll --verbose",
+    "coverage": "jest --watchAll --verbose --coverage"
   },
   "author": "",
   "license": "ISC",
