@@ -21,6 +21,7 @@ Thumbs.db
 
 # Generated files
 app/tests/data/*
+app/tests/*.json
 
 # Jest coverage
 coverage/
