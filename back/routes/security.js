@@ -20,8 +20,6 @@ module.exports = function ( userSerice ) {
       const { user, token } = await userSerice.login({ email, password });
       return res.json({ user, token });
     } catch (err) {
-      console.error(err);
-
       res.status(401).json({
         message: (err.errors && typeof err.errors === 'string') ? err.errors : 
                  (err.error?.details && Array.isArray(err.error.details)) ? err.error.details[0].message : 

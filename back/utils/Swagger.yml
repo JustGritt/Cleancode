@@ -1,38 +1,37 @@
 openapi: 3.0.3
 info:
   title: Leitner system
-  description: |-
-    This API aim to provide feature to manage a graphical interface for Leitner System.
+  description: "This API aims to provide features to manage a graphical interface for Leitner System."
   version: 1.0.0
 servers:
   - url: http://localhost:3000/docs
     description: Local server
 paths:
   /login:
-      post:
-        tags:
-          - Authentication
-        summary: User Login
-        description: Used to authenticate a user and obtain a token.
-        requestBody:
+    post:
+      tags:
+        - Authentication
+      summary: User Login
+      description: Used to authenticate a user and obtain a token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        '200':
+          description: Successful login
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginRequest"
-        responses:
-          '200':
-            description: Successful login
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    user:
-                      $ref: "#/components/schemas/User"
-                    token:
-                      type: string
-          '401':
-            description: Invalid credentials
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  token:
+                    type: string
+        '401':
+          description: Invalid credentials
 
   /register:
     post:
@@ -54,14 +53,6 @@ paths:
                 $ref: "#/components/schemas/User"
         '400':
           description: Bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: Description of the error
 
   /cards:
     get:
@@ -87,11 +78,13 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Card"
+      security:
+        - jwt: []
     post:
       tags:
         - Cards
       summary: Create a card
-      description: Used to create a new card in the system. A new card will be present in the next quizz.
+      description: Used to create a new card in the system. A new card will be present in the next quiz.
       requestBody:
         content:
           application/json:
@@ -106,35 +99,40 @@ paths:
                 $ref: "#/components/schemas/Card"
         '400':
           description: Bad request
+      security:
+        - jwt: []
   /cards/quizz:
     get:
       tags:
         - Learning
       summary: Cards for the day
-      description: Used to fetch all cards for a quizz at a given date. If no date is provided, quizz will be for today.
+      description: Used to fetch all cards for a quiz at a given date. If no date is provided, the quiz will be for today.
       parameters:
         - in: query
           name: date
-          description: Date of quizz. If not provided, date will be today.
+          description: Date of quiz. If not provided, the date will be today.
           example: 2023-11-03
           schema:
             type: string
             format: date
       responses:
         '200':
-          description: All cards of quizz for today
+          description: All cards of quiz for today
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Card"
+      security:
+        - jwt: []
+
   /cards/{cardId}/answer:
     patch:
       tags:
         - Learning
       summary: Answer a question
-      description: Used to answer a question. Body indicate if user has answered correctly or not.
+      description: Used to answer a question. The body indicates if the user has answered correctly or not.
       parameters:
         - in: path
           name: cardId
@@ -151,7 +149,7 @@ paths:
               properties:
                 isValid:
                   type: boolean
-                  description: True if user has answered correctly, false otherwise
+                  description: True if the user has answered correctly, false otherwise
       responses:
         '204':
           description: Answer has been taken into account
@@ -159,6 +157,9 @@ paths:
           description: Bad request
         '404':
           description: Card not found
+      security:
+        - jwt: []
+
 components:
   schemas:
     CardId:
@@ -171,15 +172,15 @@ components:
       properties:
         question:
           type: string
-          description: Question to be asked to the user during a quizz
-          example: "What is pair programming ?"
+          description: Question to be asked to the user during a quiz
+          example: "What is pair programming?"
         answer:
           type: string
           description: Expected answer for the question
-          example: "A practice to work in pair on same computer."
+          example: "A practice to work in pair on the same computer."
         tag:
           type: string
-          description: A tag to group cards on same topic
+          description: A tag to group cards on the same topic
           example: "Teamwork"
     Card:
       allOf:
@@ -233,7 +234,7 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/CardId"
+          type: integer
         email:
           type: string
         firstname:
