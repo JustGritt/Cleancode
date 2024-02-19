@@ -19,7 +19,9 @@ import Navbar from '../components/Navbar.astro';
 	</head>
 	<body>
 		<Navbar />
-		<slot />
+		<main class="mt-20">
+			<slot />
+		</main>
 	</body>
 
 	<script src="@root/node_modules/flowbite/dist/flowbite.js"></script>

@@ -1,0 +1,56 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Card from '@components/Card.astro';
+
+const cards = {
+    "cards": [
+        {
+            "question": "What is the capital of France?",
+            "category": "FIRST",
+            "tag": ["Geography", "History"]
+        },
+        {
+            "question": "Who wrote 'Romeo and Juliet'?",
+            "category": "SECOND",
+            "tag": ["History", "Literature"]
+        },
+        {
+            "question": "What is the atomic number of oxygen?",
+            "category": "THIRD",
+            "tag": ["Science"]
+        },
+        {
+            "question": "In which year did the Titanic sink?",
+            "category": "FOURTH",
+            "tag": ["History"]
+        },
+        {
+            "question": "What is the largest planet in our solar system?",
+            "category": "SEVENTH",
+            "tag": ["Science", "Space"]
+        },
+    ]
+}
+---
+
+<Layout title="Cards 🃏">
+    <section class="block min-h-screen">
+        <div class="p-4 sm:p-6 lg:p-8 h-full">
+            <div class="mx-auto bg-white dark:bg-slate-800 px-8 py-8 rounded-xl shadow">
+                <div class="flex justify-between items-center mb-6">
+                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+                        Deck ({cards.cards.length})
+                    </p>
+                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                        New Card
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {cards.cards.map((card) => (
+                        <Card question={card.question} category={card.category} tag={card.tag} />
+                    ))}
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>
