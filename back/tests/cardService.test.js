@@ -27,4 +27,34 @@ describe('Cards API', () => {
             expect(response.status).toBe(401);
         });
     });
+
+    describe('POST /cards', () => {
+        it('should create a card', async () => {
+            const response = await server.post('/cards').send({
+                "question": "Test Question",
+                "answer": "Test Answer",
+                "tag": 'tags1'
+            }).set('Authorization', `Bearer ${Token}`);
+            expect(response.status).toBe(201);
+            expect(response.body).toEqual(expect.objectContaining({ question: "Test Question" }));
+        });
+
+        it('should return 401 if no token is provided', async () => {
+            const response = await server.post('/cards').send({
+                "question": "Test Question",
+                "answer": "Test Answer",
+                "tag": 'tags1'
+            });
+            expect(response.status).toBe(401);
+        });
+
+        it('should return 422 if card data is invalid', async () => {
+            const response = await server.post('/cards').send({
+                "question": "Test Question",
+                "tag": 'tags1'
+            }).set('Authorization', `Bearer ${Token}`);
+            expect(response.status).toBe(422);
+        });
+    });
+
 });

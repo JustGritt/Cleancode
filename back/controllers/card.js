@@ -4,7 +4,12 @@ const Joi = require("joi");
 module.exports = function (Service) {
     return {
         post: async (req, res, next) => {
-           next(new ValidationError("Method not allowed"));
+            try {
+                const service = await Service.create(req.body, req.user);
+                res.status(201).json(service);
+            } catch (err) {
+                next(err);
+            }
         },
         cget: async (req, res, next) => {
             try {
