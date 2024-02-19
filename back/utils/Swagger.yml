@@ -5,7 +5,7 @@ info:
     This API aim to provide feature to manage a graphical interface for Leitner System.
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:3000/docs
     description: Local server
 paths:
   /cards:

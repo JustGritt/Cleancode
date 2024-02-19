@@ -8,7 +8,7 @@ const options = {
             version: "1.0.0",
         },
     },
-    apis: ["./app/utils/Swagger.yml"],
+    apis: ["./utils/Swagger.yml"],
 };
 
 exports.getSwaggerSpecs = () => {

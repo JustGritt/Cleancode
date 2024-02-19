@@ -2,18 +2,27 @@ const express = require("express");
 const cors = require('cors');
 require("dotenv").config();
 
-// Import routes
-const swaggerRoutes = require("./app/routes/swagger.routes.js");
-const userRoutes = require("./app/routes/user.routes.js");
+//Gneric CRUD
+const GenericController = require("./controllers/genericCRUD");
+const GenericRouter = require("./routes/genericCRUD");
 
+//IMPORT SERVICES
+const userService = require("./services/user");
+
+// Create express app
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // Call routes
-swaggerRoutes(app);
-userRoutes(app);
+app.use(require("./routes/swagger")())
+app.use(require("./routes/security")(userService));
+app.use("/users", new GenericRouter(new GenericController(userService)));
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is listening on port ${process.env.PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port ${process.env.PORT}`);
+    });
+}
+  
+module.exports = app;

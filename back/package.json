@@ -6,16 +6,25 @@
   "scripts": {
     "dev": "node server.js",
     "watch": "node server.js --watch",
-    "test": "jest --watchAll --verbose",
+    "seed": "node ./migrate.js",
+    "seed:all": "npx sequelize-cli db:seed:all",
+    "make:migration": "npx sequelize-cli db:migrate",
+    "test": "jest --watchAll --verbose --detectOpenHandles",
     "coverage": "jest --watchAll --verbose --coverage"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "joi": "^17.12.1",
+    "jsonwebtoken": "^9.0.2",
+    "sequelize": "^6.37.1",
+    "sqlite3": "^5.1.7",
+    "supertest": "^6.3.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   },
