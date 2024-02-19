@@ -10,5 +10,18 @@ module.exports = {
       order: Object.entries(options.order || {}),
     });
   },
+  create: async function (data) {
+    try {
+      return await User.create(data);
+    } catch (e) {
+      if (e instanceof Sequelize.ValidationError) {
+        throw ValidationError.createFromSequelizeValidationError(e);
+      }
+      throw e;
+    }
+  },
+  findById: async function (id) {
+    return User.findByPk(id);
+  },
   
 };
