@@ -12,7 +12,6 @@ class ValidationError extends Error {
         if (!acc[error.path]) {
           acc[error.path] = [];
         }
-        console.log(error.message);
         acc[error.path].push(error.message);
         return acc;
       }, {})

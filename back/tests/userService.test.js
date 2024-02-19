@@ -1,4 +1,3 @@
-const supertest = require('supertest');
 const { createServer  } = require('./testGlobalSetup');
 const userService  = require('../services/user');
 
@@ -56,4 +55,27 @@ describe('User API', () => {
 
         });
     });
+    describe('POST /login', () => {
+        it('should login a user', async () => {
+            const userData = {
+                email: 'test+1@example.com',
+                password: '12345678'
+            }
+
+            const response = await server.post('/login').send(userData);
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(expect.objectContaining({ token: expect.any(String) }));
+        });
+
+        it('should return 401 if user data is invalid', async () => {
+            const data = {
+                email: 'test@example.com',
+                password: 'pokemon1234'
+            }
+            const response = await server.post('/login').send(data);
+            console.log(response);
+            expect(response.status).toBe(401);
+        });
+    })
+
 });
