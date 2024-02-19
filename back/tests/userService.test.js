@@ -73,7 +73,6 @@ describe('User API', () => {
                 password: 'pokemon1234'
             }
             const response = await server.post('/login').send(data);
-            console.log(response);
             expect(response.status).toBe(401);
         });
     })

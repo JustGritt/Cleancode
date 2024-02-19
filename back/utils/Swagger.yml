@@ -8,6 +8,61 @@ servers:
   - url: http://localhost:3000/docs
     description: Local server
 paths:
+  /login:
+      post:
+        tags:
+          - Authentication
+        summary: User Login
+        description: Used to authenticate a user and obtain a token.
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginRequest"
+        responses:
+          '200':
+            description: Successful login
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    user:
+                      $ref: "#/components/schemas/User"
+                    token:
+                      type: string
+          '401':
+            description: Invalid credentials
+
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: User Registration
+      description: Used to register a new user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Description of the error
+
   /cards:
     get:
       tags:
@@ -149,3 +204,39 @@ components:
         - SIXTH
         - SEVENTH
         - DONE
+
+    LoginRequest:
+      type: object
+      required: ["email", "password"]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    RegisterRequest:
+      type: object
+      required: ["email", "password", "firstname", "lastname"]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/CardId"
+        email:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
