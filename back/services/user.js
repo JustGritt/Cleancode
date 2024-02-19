@@ -23,5 +23,5 @@ module.exports = {
   findById: async function (id) {
     return User.findByPk(id);
   },
- 
+  
 };

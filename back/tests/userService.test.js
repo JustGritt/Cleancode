@@ -24,6 +24,11 @@ describe('User API', () => {
             expect(response.status).toBe(200);
             expect(response.body).toEqual(expect.objectContaining({ id: user.id }));
         });
+
+        if('should return 404 if user does not exist', async () => {
+            const response = await server.get(`/users/999999`) 
+            expect(response.status).toBe(404);
+        });
     });
     describe('POST /register', () => {
         it('should create a user', async () => {
@@ -33,11 +38,22 @@ describe('User API', () => {
                 lastname: 'User 1',
                 password: '12345678',
             } 
-            
+
             const response = await server.post('/register').send(userData);
 
         expect(response.status).toBe(201);
         expect(response.body).toEqual(expect.objectContaining({ email: userData.email }));
+        });
+
+        it('should return 400 if user data is invalid', async () => {
+            const userData = {
+                email: 'test+4@example.com',
+                firstname: 'User 4',
+                lastname: 'User 4',
+            }
+            const response = await server.post('/register').send(userData);
+            expect(response.status).toBe(400);
+
         });
     });
 });
