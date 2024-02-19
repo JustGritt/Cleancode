@@ -25,4 +25,19 @@ describe('User API', () => {
             expect(response.body).toEqual(expect.objectContaining({ id: user.id }));
         });
     });
+    describe('POST /register', () => {
+        it('should create a user', async () => {
+            const userData = {
+                email: 'test+1@example.com', 
+                firstname: 'User 1', 
+                lastname: 'User 1',
+                password: '12345678',
+            } 
+            
+            const response = await server.post('/register').send(userData);
+
+        expect(response.status).toBe(201);
+        expect(response.body).toEqual(expect.objectContaining({ email: userData.email }));
+        });
+    });
 });
