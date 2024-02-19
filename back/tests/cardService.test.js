@@ -26,6 +26,11 @@ describe('Cards API', () => {
             const response = await server.get('/cards?tags=tag1,tag2');
             expect(response.status).toBe(401);
         });
+        it('should retrieve all cards if tags is undefined', async () => {
+            const response = await server.get('/cards').set('Authorization', `Bearer ${Token}`);
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(expect.any(Array));
+        });
     });
 
     describe('POST /cards', () => {
@@ -36,7 +41,7 @@ describe('Cards API', () => {
                 "tag": 'tags1'
             }).set('Authorization', `Bearer ${Token}`);
             expect(response.status).toBe(201);
-            expect(response.body).toEqual(expect.objectContaining({ question: "Test Question" }));
+            expect(response.body).toEqual(expect.objectContaining({ category: "FIRST" }));
         });
 
         it('should return 401 if no token is provided', async () => {

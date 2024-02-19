@@ -17,11 +17,8 @@ module.exports = {
     }
   },
   findByTags: async function (tags, user) {
-    return await Card.findAll({
-      where: {
-        userId: user.id,
-        tag: tags,
-      },
-    });
-  },
+    //if the tags is empty, return all the cards for the user otherwise return the cards that match the tags
+    const where = tags.length ? { tag: tags, userId: user.id } : { userId: user.id };
+    return await Card.findAll({ where });
+  }
 };

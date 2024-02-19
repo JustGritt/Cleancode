@@ -14,14 +14,16 @@ module.exports = function (Service) {
         cget: async (req, res, next) => {
             try {
                 const tags = req.query.tags ?? [];
-                const schema =  Joi.alternatives(
-                    Joi.string().min(1), // For a single tag
-                    Joi.array().items(Joi.string()).min(1) // For multiple tags
-                );
+                const schema = Joi.alternatives(
+                    Joi.array().items(Joi.string()).min(0),
+                    Joi.string().min(1),
+                    Joi.array().items(Joi.string()).min(1)
+                )
                 const { error } = schema.validate(tags);
                 if (error) {
                     throw new ValidationError("Invalid tags");
                 }
+                console.log(tags);
                 const cards = await Service.findByTags(tags, req.user);
                 res.json(cards);
             } catch (err) {
