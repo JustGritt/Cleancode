@@ -1,6 +1,15 @@
 const { Model, DataTypes } = require("sequelize");
-const validCategories = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'DONE'];
 
+const validCategories = [
+    {category: 'FIRST', frequence: 1},
+    {category: 'SECOND', frequence: 2},
+    {category: 'THIRD', frequence: 4},
+    {category: 'FOURTH', frequence: 8},
+    {category: 'FIFTH', frequence: 16},
+    {category: 'SIXTH', frequence: 32},
+    {category: 'SEVENTH', frequence: 64},
+    {category: 'DONE', frequence: 0},
+];
 
 module.exports = function (connection) {
     class Card extends Model {
@@ -9,6 +18,13 @@ module.exports = function (connection) {
                 foreignKey: "userId",
                 as: "user"
             });
+        }
+
+        getNextCategory() {
+            //for the given instance of card, traverse the validCategories array and return the next category
+            const currentCategory = validCategories.find((item) => item.category === this.category);
+            const nextCategory = validCategories.find((item) => item.frequence === currentCategory.frequence * 2);
+            return nextCategory ? nextCategory.category : "DONE";
         }
     }
     Card.init(
@@ -33,10 +49,10 @@ module.exports = function (connection) {
         category: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: validCategories.find((category) => category === "FIRST"),
+            defaultValue: validCategories[0].category,
             validate: {
                 isIn: {
-                    args: [validCategories],
+                    args: [validCategories.map(item => item.category)],
                     msg: "Invalid category value",
                 },
             },

@@ -62,4 +62,16 @@ describe('Cards API', () => {
         });
     });
 
+    describe("Get next category", () => {   
+        it('should return the next category', async () => {
+            const newCard = await cardsService.create({
+                question: "Test Question",
+                answer: "Test Answer",
+                tag: 'tags1'
+            }, { id: 1 });
+            const nextCategory = await cardsService.getNextCategory(newCard);
+            console.log(nextCategory, newCard);
+            expect(nextCategory).toBe('SECOND');
+        });
+    });
 });
