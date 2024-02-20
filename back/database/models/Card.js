@@ -26,6 +26,10 @@ module.exports = function (connection) {
             const nextCategory = validCategories.find((item) => item.frequence === currentCategory.frequence * 2);
             return nextCategory ? nextCategory.category : "DONE";
         }
+
+        getDefaultValue() {
+            return validCategories[0].category;
+        }
     }
     Card.init(
     {

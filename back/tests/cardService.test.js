@@ -1,5 +1,6 @@
 const { createServer  } = require('./testGlobalSetup');
 const cardsService  = require('../services/card');
+const supertest = require('supertest');
 
 const server = createServer();
 let Token = '';
@@ -81,7 +82,6 @@ describe('Cards API', () => {
                 tag: 'tags1'
             }, { id: 1 });
             const nextCategory = await cardsService.setNextCategory(newCard);
-            console.log(nextCategory, "nextCategory");
             expect(nextCategory.category).toBe("SIXTH");
 
         });
@@ -94,8 +94,21 @@ describe('Cards API', () => {
                 tag: 'tags1'
             }, { id: 1 });
             const nextCategory = await cardsService.setNextCategory(newCard);
-            console.log(nextCategory, "nextCategory");
             expect(nextCategory.category).toBe("DONE");
+        });
+    });
+
+    describe("Update the Card Category", () => {
+        it('should set the category to the default value', async () => {
+            const newCard = await cardsService.create({
+                question: "Le meilleur pokemon",
+                answer: "Mewtwo",
+                category: "SEVENTH",
+                tag: 'tags1'
+            }, { id: 1 });
+            const response = await server.patch(`/cards/${newCard.id}/answer`).send({ isValid: false }).set('Authorization', `Bearer ${Token}`);
+            expect(response.status).toBe(200);
+            expect(response.body.category).toBe("FIRST");
         });
     });
 });

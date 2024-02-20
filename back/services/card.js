@@ -22,7 +22,17 @@ module.exports = {
     return await Card.findAll({ where });
   },
   setNextCategory: async function (card) {
-    const newCategpry =  card.getNextCategory();
+    const newCategpry = card.getNextCategory();
     return await card.update({ category: newCategpry });
+  },
+  getCardForDate: async function (date, user) {
+    return await Card.findAll({ where: { userId: user.id, date } });
+  },
+  findById: async function (id) {
+    return await Card.findByPk(id);
+  },
+  setToDefaultCategory: async function (card) {
+    const defaultValue = card.getDefaultValue();
+    return await card.update({ category: defaultValue });
   }
 };

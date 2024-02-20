@@ -6,7 +6,7 @@ module.exports = function (Service) {
         post: async (req, res, next) => {
             try {
                 const service = await Service.create(req.body, req.user);
-                res.status(201).json(service);
+                return res.status(201).json(service);
             } catch (err) {
                 next(err);
             }
@@ -25,25 +25,35 @@ module.exports = function (Service) {
                 }
                 console.log(tags);
                 const cards = await Service.findByTags(tags, req.user);
-                res.json(cards);
+                return res.json(cards);
             } catch (err) {
                 next(err);
             }
         },
         get: async (req, res, next) => {
-            next(new ValidationError("Method not allowed"));
-        },
-        put: async (req, res, next) => {
-            //throw not handled method
-            next(new ValidationError("Method not allowed"));
+            const date = req.query.date;
+            const cards = await Service.getCardForDate(date, req.user);
+            return res.json(cards);
         },
         patch: async (req, res, next) => {
-            //throw not handled method
-            next(new ValidationError("Method not allowed"));
+            const cardId = req.params.cardId;
+            const card = await Service.findById(cardId);
+            const { isValid } = req.body;
+            const validationSchema = Joi.object({
+                isValid: Joi.boolean().required()
+            });
+            const { error } = validationSchema.validate(req.body);
+            if (error) {
+                throw new ValidationError("Invalid data");
+            }
+
+            if (isValid) {
+                const updatedCard = await Service.setNextCategory(card);
+                return res.json(updatedCard);
+            }
+
+            const updatedCard = await Service.setToDefaultCategory(card);
+            return res.json(updatedCard);
         },
-        delete: async (req, res, next) => {
-            //throw not handled method
-            next(new ValidationError("Method not allowed"));
-        }
     }
 }

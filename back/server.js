@@ -9,6 +9,9 @@ const GenericController = require("./controllers/genericCRUD");
 const CardController = require("./controllers/card");
 const GenericRouter = require("./routes/genericCRUD");
 
+//ROUTER
+const CardRouter = require("./routes/card");
+
 //IMPORT SERVICES
 const userService = require("./services/user");
 const cardService = require("./services/card");
@@ -23,8 +26,8 @@ app.disable('x-powered-by');
 app.use(require("./routes/swagger")())
 app.use(require("./routes/security")(userService));
 app.use("/users", new GenericRouter(new GenericController(userService)));
-//app.use("/cards", authenticationGuard({ JWTAuth: true}), new CardRouter(new CardController(cardService)));
-app.use("/cards", authenticationGuard({ JWTAuth: true}), new GenericRouter(new CardController(cardService)));
+app.use("/cards", authenticationGuard({ JWTAuth: true}), new CardRouter(new CardController(cardService)));
+//app.use("/cards", authenticationGuard({ JWTAuth: true}), new GenericRouter(new CardController(cardService)));
 
 
 app.use(errorHandler);
