@@ -9,7 +9,7 @@ module.exports = function (connection) {
 
     generateToken() {
       const jwt = require("jsonwebtoken");
-      return jwt.sign({ id: this.id, role: "admin"}, process.env.JWT_SECRET, {
+      return jwt.sign({ id: this.id, role: "ROLE_USER"}, process.env.JWT_SECRET, {
         expiresIn: "1y",
       });
     }

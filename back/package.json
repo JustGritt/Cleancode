@@ -9,7 +9,7 @@
     "seed": "node ./migrate.js",
     "seed:all": "npx sequelize-cli db:seed:all",
     "make:migration": "npx sequelize-cli db:migrate",
-    "test": "jest --watchAll --verbose --detectOpenHandles",
+    "test": "jest --watchAll --verbose", 
     "coverage": "jest --watchAll --verbose --coverage"
   },
   "author": "",
