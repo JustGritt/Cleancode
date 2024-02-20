@@ -1,0 +1,75 @@
+---
+import Layout from '@layouts/Layout.astro';
+---
+
+<Layout title="New Card 🎴">
+    <section class="block min-h-screen">
+        <div class="p-4 sm:p-6 lg:p-8 h-full">
+            <div class="mx-auto bg-white dark:bg-slate-800 px-8 py-8 rounded-xl shadow">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8 max-w-lg mx-auto">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Add a new card
+                    </h1>
+                    <form id="newCardForm" class="space-y-4 md:space-y-6" action="/register" method="POST">
+                        <div>
+                            <label for="question" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Question
+                            </label>
+                            <input type="text" name="question" id="question" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=true placeholder="What do you get if you multiply six by nine?" />
+                        </div>
+
+                        <div>
+                            <label for="answer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Answer
+                            </label>
+                            <input type="text" name="answer" id="answer" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=true placeholder="42" />
+                        </div>
+
+                        <div>
+                            <label for="tags" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Tags
+                            </label>
+                            <input type="text" name="tags" id="tags" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=true  placeholder="Universe" />
+                        </div>
+
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            Add to deck
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>
+
+<script>
+    // Handle the new card form
+    const newCardForm = document.getElementById('newCardForm');
+    newCardForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Get the form data
+        const formData = new FormData(newCardForm as HTMLFormElement);
+        const question = formData.get('question') as string;
+        const answer = formData.get('answer') as string;
+        const tag = formData.get('tags') as string;
+
+        // Send the form data to the server
+        const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/cards`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ question, answer, tag }),
+        });
+
+        // Handle the response
+        if (response.status === 201) {
+            alert('The card has been added to the deck!');
+            window.location.href = '/cards';
+        } else {
+            const data = await response.json();
+            alert(data.message);
+        }
+    });
+</script>

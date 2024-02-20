@@ -52,25 +52,25 @@ describe('Card Service', () => {
 
     it('Should update the card category when the user successfully answers the question', async () => {
         const card = new Card("1", "FIRST", "What is the first question?", "This is the first answer", "Testing Tag");
-        const userAnwser = "This is the first answer";
+        const useranswer = "This is the first answer";
 
-        card.checkAnswer(userAnwser);
+        card.checkAnswer(useranswer);
         expect(card.category).toBe("SECOND");
     });
 
     it('Should update the card category to FIRST when the user fails to answer the question', async () => {
         const card = new Card("1", "FIRST", "What is the first question?", "This is the first answer", "Testing Tag");
-        const userAnwser = "This is not the first answer";
+        const useranswer = "This is not the first answer";
 
-        card.checkAnswer(userAnwser);
+        card.checkAnswer(useranswer);
         expect(card.category).toBe("FIRST");
     });
 
     it('Should remove the card from the database when the category hits SEVENTH', async () => {
         const card = new Card("1", "SEVENTH", "What is the seventh question?", "This is the seventh answer", "Testing Tag");
-        const userAnwser = "This is the seventh answer";
+        const useranswer = "This is the seventh answer";
 
-        card.checkAnswer(userAnwser);
+        card.checkAnswer(useranswer);
         expect(card.category).toBe(undefined);
     });
 

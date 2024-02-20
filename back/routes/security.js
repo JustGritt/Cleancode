@@ -33,6 +33,8 @@ module.exports = function ( userSerice ) {
     try {
       const body = req.body;
       const user = await userSerice.create(body);
+      console.log("body", body)
+      console.log("user", user)
       res.status(201).json(user);
     } catch (error) {
       res.status(400).json({ message: error.message });

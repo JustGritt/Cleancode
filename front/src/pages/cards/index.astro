@@ -7,27 +7,27 @@ const cards = {
         {
             "question": "What is the capital of France?",
             "category": "FIRST",
-            "tag": ["Geography", "History"]
+            "tag": "Geography"
         },
         {
             "question": "Who wrote 'Romeo and Juliet'?",
             "category": "SECOND",
-            "tag": ["History", "Literature"]
+            "tag": "History"
         },
         {
             "question": "What is the atomic number of oxygen?",
             "category": "THIRD",
-            "tag": ["Science"]
+            "tag": "Science"
         },
         {
             "question": "In which year did the Titanic sink?",
             "category": "FOURTH",
-            "tag": ["History"]
+            "tag": "History"
         },
         {
             "question": "What is the largest planet in our solar system?",
             "category": "SEVENTH",
-            "tag": ["Science", "Space"]
+            "tag": "Science"
         },
     ]
 }
@@ -41,9 +41,9 @@ const cards = {
                     <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">
                         Deck ({cards.cards.length})
                     </p>
-                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    <a href="/cards/new" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         New Card
-                    </button>
+                    </a>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {cards.cards.map((card) => (

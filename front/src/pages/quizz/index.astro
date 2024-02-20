@@ -1,18 +1,237 @@
 ---
 import Layout from '@layouts/Layout.astro';
+import ValidIcon from '@icons/valid.astro';
+import InvalidIcon from '@icons/invalid.astro';
+
+const cards = {
+    "cards": [
+        {
+            "id": "6c10ad48-2bb8-4e2e-900a-21d62c00c07b",
+            "question": "What is the capital of France?",
+            "answer": "Paris",
+            "category": "FIRST",
+            "tag": "Geography"
+        },
+        {
+            "id": "6ca0ad48-2bb8-4e2e-900a-21d62c00c07b",
+            "question": "Who wrote 'Romeo and Juliet'?",
+            "answer": "William Shakespeare",
+            "category": "SECOND",
+            "tag": "History"
+        },
+        {
+            "id": "6c10ad48-2bc8-4e2e-900a-21d62c00c07b",
+            "question": "What is the atomic number of oxygen?",
+            "answer": "8",
+            "category": "THIRD",
+            "tag": "Science"
+        },
+    ]
+}
+
 ---
 
 <Layout title="Quizz 📚">
-    <section class="block min-h-screen">
-        <div class="p-4 sm:p-6 lg:p-8 h-full">
-            <div class="mx-auto bg-white dark:bg-slate-800 px-8 py-8 rounded-xl shadow">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8 max-w-lg mx-auto">
-                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
-                        This is the Quizz page
-                    </h1>
-
+    <section class="container flex justify-center items-center mt-20 h-dvh w-swh">
+        <div class="relative h-full w-full quizz grid place-items-center overflow-hidden">
+            {cards.cards.map((card) => (
+                <div class="question-card quizz--card absolute overflow-hidden bg-white pb-16 inline-flex justify-center items-center flex-col w-full max-w-[500px] h-[400px] shadow border rounded">
+                    <div class="question flex justify-center items-center flex-col pointer-events-none">
+                        <h3 class="px-8 pt-16 text-center text-xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-8 inline pointer-events-none">{card.question}</h3>
+                        <input type="text" class="question-input mt-4 w-1/2 p-2 border-2 border-gray-300 rounded-lg pointer-events-auto" />
+                        <button class="question-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg pointer-events-auto">Check Answer</button>
+                    </div>
+                    <div class="answer hidden px-8 pt-16 text-center text-xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-8 pointer-events-none">{card.answer}</div>
                 </div>
+            ))}
+
+            <div class="quizz--buttons absolute bottom-40">
+                <button id="invalid" class="grid place-items-center p-4 bg-white rounded-full">
+                    <InvalidIcon />
+                </button>
+                <button id="valid" class="grid place-items-center p-4 bg-white rounded-full">
+                    <ValidIcon />
+                </button>
             </div>
         </div>
     </section>
 </Layout>
+
+<style lang="scss">
+    html, body {
+        overflow: hidden;
+    }
+
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .quizz {
+        opacity: 0;
+        transition: opacity 0.1s ease-in-out;
+        overflow: hidden;
+        &.loaded {
+            opacity: 1;
+        }
+
+        &--card {
+            overflow: hidden;
+            will-change: transform;
+            transition: all 0.2s ease-in-out;
+            cursor: -webkit-grab;
+            cursor: -moz-grab;
+            cursor: grab;
+            &.moving {
+                transition: none;
+                cursor: -webkit-grabbing;
+                cursor: -moz-grabbing;
+                cursor: grabbing;
+            }
+        }
+
+        &--buttons {
+            flex: 0 0 100px;
+            text-align: center;
+            padding-top: 20px;
+
+            button {
+                border-radius: 50%;
+                line-height: 60px;
+                width: 60px;
+                border: 0;
+                background: #FFFFFF;
+                display: inline-block;
+                margin: 0 8px;
+                &:focus {
+                    outline: 0;
+                }
+            }
+        }
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.js" integrity="sha512-qRj8N7fxOHxPkKjnQ9EJgLJ8Ng1OK7seBn1uk8wkqaXpa7OA13LO6txQ7+ajZonyc9Ts4K/ugXljevkFTUGBcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script lang="ts">
+    var quizzContainer = document.querySelector('.quizz');
+    var deck = document.querySelectorAll('.quizz--card');
+
+    var invalid = document.getElementById('invalid');
+    var valid = document.getElementById('valid');
+
+    const initCards = () => {
+        const newCards = Array.from(document.querySelectorAll('.quizz--card:not(.removed)'));
+        newCards.forEach((card, index) => {
+            card.style.zIndex = `${deck.length - index}`;
+            card.style.transform = `scale(${(20 - index) / 20}) translateY(-${30 * index}px)`;
+            card.style.opacity = `${(10 - index) / 10}`;
+        });
+
+        quizzContainer.classList.add('loaded');
+    }
+
+    function createButtonListener(valid) {
+    return function (event) {
+        const card = document.querySelector('.quizz--card:not(.removed)');
+        if (!card) return;
+
+        const moveOutWidth = document.body.clientWidth * 1.5;
+        const direction = valid ? '' : '-';
+        const rotation = valid ? '-30deg' : '30deg';
+
+        card.classList.add('removed');
+        card.style.transform = `translate(${direction}${moveOutWidth}px, -100px) rotate(${rotation})`;
+
+        initCards();
+
+        const remainingCards = document.querySelectorAll('.quizz--card:not(.removed)');
+        if (remainingCards.length === 0) {
+            window.location.href = '/';
+            alert('Quizz is over');
+        }
+
+        event.preventDefault();
+    };
+}
+
+    const invalidListener = createButtonListener(false);
+    const validListener = createButtonListener(true);
+
+    initCards();
+    deck.forEach((el) => {
+        const hammertime = new Hammer(el);
+        const textInput = document.querySelector('.question-input');
+
+        hammertime.on('pan', () => {
+            if (!textInput.value) return;
+            el.classList.add('moving');
+        });
+
+        hammertime.on('pan', (event) => {
+            if (!textInput.value) return;
+            if (event.deltaX === 0) return;
+            if (event.center.x === 0 && event.center.y === 0) return;
+
+            quizzContainer.classList.toggle('quizz_valid', event.deltaX > 0);
+            quizzContainer.classList.toggle('quizz_invalid', event.deltaX < 0);
+
+            const xMulti = event.deltaX * 0.03;
+            const yMulti = event.deltaY / 80;
+            const rotate = xMulti * yMulti;
+
+            event.target.style.transform = `translate(${event.deltaX}px, ${event.deltaY}px) rotate(${rotate}deg)`;
+        });
+
+        hammertime.on('panend', (event) => {
+            if (!textInput.value) return;
+            el.classList.remove('moving');
+            quizzContainer.classList.remove('quizz_valid');
+            quizzContainer.classList.remove('quizz_invalid');
+            console.log(event)
+
+            const moveOutWidth = document.body.clientWidth;
+            const keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
+            event.target.classList.toggle('removed', !keep);
+
+            if (!keep) {
+                const endX = Math.max(Math.abs(event.velocityX) * moveOutWidth, moveOutWidth);
+                const toX = event.deltaX > 0 ? endX : -endX;
+                const endY = Math.abs(event.velocityY) * moveOutWidth;
+                const toY = event.deltaY > 0 ? endY : -endY;
+                const xMulti = event.deltaX * 0.03;
+                const yMulti = event.deltaY / 80;
+                const rotate = xMulti * yMulti;
+
+                event.target.style.transform = `translate(${toX}px, ${(toY + event.deltaY)}px) rotate(${rotate}deg)`;
+                initCards();
+            } else {
+                event.target.style.transform = '';
+            }
+        });
+
+        const checkButton = el.querySelector('button');
+        checkButton.addEventListener('click', () => {
+            const answer = el.querySelector('.answer').textContent;
+            const input = el.querySelector('.question-input').value;
+
+            el.querySelector('.question').classList.add('hidden');
+            el.querySelector('.answer').classList.remove('hidden');
+
+            if (input.toLowerCase() === answer.toLowerCase()) {
+                el.style.backgroundColor = '#78e08f';
+                // TODO: Validate the card
+            } else {
+                el.style.backgroundColor = '#fab1a0';
+                // TODO: Validate the card
+
+            }
+        });
+
+    });
+
+    invalid.addEventListener('click', invalidListener);
+    valid.addEventListener('click', validListener);
+</script>
