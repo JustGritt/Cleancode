@@ -1,36 +1,6 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Card from '@components/Card.astro';
-
-const cards = {
-    "cards": [
-        {
-            "question": "What is the capital of France?",
-            "category": "FIRST",
-            "tag": "Geography"
-        },
-        {
-            "question": "Who wrote 'Romeo and Juliet'?",
-            "category": "SECOND",
-            "tag": "History"
-        },
-        {
-            "question": "What is the atomic number of oxygen?",
-            "category": "THIRD",
-            "tag": "Science"
-        },
-        {
-            "question": "In which year did the Titanic sink?",
-            "category": "FOURTH",
-            "tag": "History"
-        },
-        {
-            "question": "What is the largest planet in our solar system?",
-            "category": "SEVENTH",
-            "tag": "Science"
-        },
-    ]
-}
 ---
 
 <Layout title="Cards 🃏">
@@ -38,19 +8,74 @@ const cards = {
         <div class="p-4 sm:p-6 lg:p-8 h-full">
             <div class="mx-auto bg-white dark:bg-slate-800 px-8 py-8 rounded-xl shadow">
                 <div class="flex justify-between items-center mb-6">
-                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                        Deck ({cards.cards.length})
+                    <p id="deck" class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+                        Deck (0)
                     </p>
                     <a href="/cards/new" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         New Card
                     </a>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {cards.cards.map((card) => (
+                <div id="card-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- {cards.cards.map((card) => (
                         <Card question={card.question} category={card.category} tag={card.tag} />
-                    ))}
+                    ))} -->
                 </div>
             </div>
         </div>
     </section>
 </Layout>
+
+<script is:inline type="module">
+    const token = localStorage.getItem('token')
+    const cardList = document.getElementById('card-list')
+
+    if (token) {
+        const req = await fetch(`http://localhost:3000/cards`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const cards = await req.json()
+
+        document.getElementById('deck').innerHTML = `Deck (${cards.length})`
+        cards.forEach(card => {
+            cardList.innerHTML += `
+            <div class="relative block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <div class="flex justify-center items-center gap-2">
+                    <p class="category-${card.category} py-1 px-3 rounded-full text-black">
+                        ${card.category}
+                    </p>
+                </div>
+                <h5 class="mb-2 mx-4 py-10 text-xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
+                    ${ card.question }
+                </h5>
+                <div class="flex justify-center items-center gap-2">
+                    #${ card.tag }
+                </div>
+            </div>
+            `
+        })
+
+        const categoriesColors = {
+            'FIRST': 'bg-red-100',
+            'SECOND': 'bg-yellow-100',
+            'THIRD': 'bg-green-100',
+            'FOURTH': 'bg-blue-100',
+            'FIFTH': 'bg-indigo-100',
+            'SIXTH': 'bg-purple-100',
+            'SEVENTH': 'bg-pink-100',
+            'DONE': 'bg-gray-100'
+        }
+
+        const categories = document.querySelectorAll('[class^="category-"]')
+        categories.forEach(category => {
+            const categoryClass = category.classList[0].split('-')[1]
+            category.classList.add(categoriesColors[categoryClass])
+        })
+    } else {
+        window.location.href = '/login'
+        console.log('User is not logged in')
+    }
+</script>
