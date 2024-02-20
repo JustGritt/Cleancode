@@ -70,8 +70,32 @@ describe('Cards API', () => {
                 tag: 'tags1'
             }, { id: 1 });
             const nextCategory = await cardsService.setNextCategory(newCard);
-            console.log(nextCategory);
             expect(nextCategory.category).toBe("SECOND");
+        });
+
+        it('should return the SIXTH category', async () => {
+            const newCard = await cardsService.create({
+                question: "Le meilleur pokemon",
+                answer: "Mewtwo",
+                category: "FIFTH",
+                tag: 'tags1'
+            }, { id: 1 });
+            const nextCategory = await cardsService.setNextCategory(newCard);
+            console.log(nextCategory, "nextCategory");
+            expect(nextCategory.category).toBe("SIXTH");
+
+        });
+
+        it('should return the final category', async () => {
+            const newCard = await cardsService.create({
+                question: "Le meilleur pokemon",
+                answer: "Mewtwo",
+                category: "SEVENTH",
+                tag: 'tags1'
+            }, { id: 1 });
+            const nextCategory = await cardsService.setNextCategory(newCard);
+            console.log(nextCategory, "nextCategory");
+            expect(nextCategory.category).toBe("DONE");
         });
     });
 });
