@@ -21,7 +21,8 @@ module.exports = {
     const where = tags.length ? { tag: tags, userId: user.id } : { userId: user.id };
     return await Card.findAll({ where });
   },
-  getNextCategory: async function (card) {
-    return card.getNextCategory();
+  setNextCategory: async function (card) {
+    const newCategpry =  card.getNextCategory();
+    return await card.update({ category: newCategpry });
   }
 };

@@ -69,9 +69,9 @@ describe('Cards API', () => {
                 answer: "Test Answer",
                 tag: 'tags1'
             }, { id: 1 });
-            const nextCategory = await cardsService.getNextCategory(newCard);
-            console.log(nextCategory, newCard);
-            expect(nextCategory).toBe('SECOND');
+            const nextCategory = await cardsService.setNextCategory(newCard);
+            console.log(nextCategory);
+            expect(nextCategory.category).toBe("SECOND");
         });
     });
 });
