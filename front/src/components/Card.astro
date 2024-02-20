@@ -1,21 +1,38 @@
 ---
 interface Props {
-	title: string;
-	body: string;
-	href: string;
+    question: string;
+    category: string;
+    tag: Array<string>;
 }
 
-const { href, title, body } = Astro.props;
+const { question , category, tag } = Astro.props;
+
+const categoryColor = {
+    'FIRST': 'bg-red-500',
+    'SECOND': 'bg-orange-400',
+    'THIRD': 'bg-yellow-300',
+    'FOURTH': 'bg-green-400',
+    'FIFTH': 'bg-cyan-400',
+    'SEVENTH': 'bg-blue-400',
+    'DONE': 'bg-black',
+}[category] || 'hidden';
+
 ---
 
-<li class="link-card">
-	<a href={href}>
-		<h2>
-			{title}
-			<span>&rarr;</span>
-		</h2>
-		<p>
-			{body}
-		</p>
-	</a>
-</li>
+<div class="relative block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+    <div class="flex justify-end items-center gap-2 mb-4">
+        <p class={`${categoryColor} py-1 px-3 rounded-full text-white`}>
+            { category }
+        </p>
+    </div>
+    <h5 class="mb-2 mx-4 py-8 text-xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
+        { question }
+    </h5>
+    <div class="flex items-center gap-2 mt-6">
+        { tag.map((tag) => (
+            <div class="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 capitalize">
+                #{ tag }
+            </div>
+        )) }
+    </div>
+</div>
