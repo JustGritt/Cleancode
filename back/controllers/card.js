@@ -1,6 +1,25 @@
 const ValidationError = require("../errors/ValidationError");
 const Joi = require("joi");
 
+function calculateDaysDifference(date1, date2) {
+    const day1 = date1.getDate();
+    const day2 = date2.getDate();
+    const difference = day1 - day2;
+    return difference;
+}
+
+function selectCardsForQuizz(cards, date) {
+    return cards.filter(card => {
+        if (card.category === "DONE") {
+            return false;
+        }
+        const cardFrequenecy = card.getCategoryFrequence();
+        const lastQuizzDate = new Date(card.updatedAt);
+        const delayInDays = calculateDaysDifference(new Date(date), lastQuizzDate);
+        return delayInDays >= cardFrequenecy;
+    });
+}
+
 module.exports = function (Service) {
     return {
         post: async (req, res, next) => {
@@ -32,8 +51,9 @@ module.exports = function (Service) {
         },
         get: async (req, res, next) => {
             const date = req.query.date;
-            const cards = await Service.getCardForDate(date, req.user);
-            return res.json(cards);
+            const cards = await Service.findAll(req.user);
+            const filteredCards = selectCardsForQuizz(cards, date);
+            return res.json(filteredCards);
         },
         patch: async (req, res, next) => {
             const cardId = req.params.cardId;
@@ -44,7 +64,7 @@ module.exports = function (Service) {
             });
             const { error } = validationSchema.validate(req.body);
             if (error) {
-                throw new ValidationError("Invalid data");
+                return next(new ValidationError(error.details[0].message));
             }
 
             if (isValid) {

@@ -33,6 +33,9 @@ module.exports = {
   },
   setToDefaultCategory: async function (card) {
     const defaultValue = card.getDefaultValue();
-    return await card.update({ category: defaultValue });
+    return await card.update({ category: defaultValue});
+  },
+  findAll: async function (user) {
+    return await Card.findAll({ where: { userId: user.id } });
   }
 };

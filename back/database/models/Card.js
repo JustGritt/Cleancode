@@ -30,6 +30,10 @@ module.exports = function (connection) {
         getDefaultValue() {
             return validCategories[0].category;
         }
+
+        getCategoryFrequence() {
+            return validCategories.find((item) => item.category === this.category).frequence;
+        }
     }
     Card.init(
     {
